@@ -40,3 +40,13 @@ docker compose + pm2
 /friend_request/list GET 好友请求列表  
 /friend_request/agree GET 同意好友请求  
 /friend_request/reject GET 拒绝好友请求
+
+## prisma
+
+## redis
+
+## email
+
+nodemailer
+
+## pino

@@ -51,3 +51,5 @@ nodemailer
 @types/nodemailer
 
 ## pino
+
+## JWT

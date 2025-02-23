@@ -47,6 +47,7 @@ docker compose + pm2
 
 ## email
 
-nodemailer
+nodemailer  
+@types/nodemailer
 
 ## pino

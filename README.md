@@ -41,7 +41,32 @@ docker compose + pm2
 /friend_request/agree GET 同意好友请求  
 /friend_request/reject GET 拒绝好友请求
 
+## 第一阶段
+
+- [] 完成用户模块 登录、注册
+- [] 完成好友管理模块 添加好友
+- [] 完成聊天室管理模块 新建聊天室、加入聊天室
+- [] 完成聊天模块 聊天
+
+## 第二阶段
+
+- [] 完成收藏管理模块 添加收藏
+- [] 完成好友请求管理模块 好友请求
+
 ## prisma
+
+create  
+findMany  
+findManyBy  
+findManyByRelation  
+createMany  
+updateMany  
+deleteMany  
+findUnique  
+findFirst
+
+- @relation
+- @@id
 
 ## redis
 
@@ -53,3 +78,20 @@ nodemailer
 ## pino
 
 ## JWT
+
+## 用户模块
+
+```prisma
+model User {
+  friends         Friendship[] @relation("userToFriend")
+  inverseFrinends Friendship[] @relation("friendToUser")
+}
+
+model Friendship {
+  user   User @relation("userToFriend", fields: [userId], references: [id])
+  userId Int
+  friend User @relation("friendToUser", fields: [friendId], references: [id])
+  friendId Int
+  @@id([userId, friendId])
+}
+```

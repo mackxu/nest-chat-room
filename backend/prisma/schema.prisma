@@ -16,12 +16,23 @@ datasource db {
 // model
 
 model User {
-  id         Int      @id @default(autoincrement())
-  username   String   @unique @db.VarChar(50)
-  password   String   @db.VarChar(50)
-  nickName   String   @default("") @db.VarChar(50)
-  email      String   @db.VarChar(50)
-  headPic    String   @default("") @db.VarChar(100)
-  createTime DateTime @default(now())
-  updateTime DateTime @updatedAt
+  id              Int          @id @default(autoincrement())
+  username        String       @unique @db.VarChar(50)
+  password        String       @db.VarChar(50)
+  nickName        String       @default("") @db.VarChar(50)
+  email           String       @db.VarChar(50)
+  headPic         String       @default("") @db.VarChar(100)
+  createTime      DateTime     @default(now())
+  updateTime      DateTime     @updatedAt
+  friends         Friendship[] @relation("userToFriend")
+  inverseFrinends Friendship[] @relation("friendToUser")
+}
+
+model Friendship {
+  user     User @relation("userToFriend", fields: [userId], references: [id])
+  userId   Int
+  friend   User @relation("friendToUser", fields: [friendId], references: [id])
+  friendId Int
+
+  @@id([userId, friendId])
 }

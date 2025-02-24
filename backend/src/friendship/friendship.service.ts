@@ -16,11 +16,17 @@ export class FriendshipService {
       },
     });
     if (user) {
+      // 返回好友列表
       return await this.prisma.user.findMany({
         where: {
           id: {
             in: user.friends.map((friend) => friend.friendId),
           },
+        },
+        select: {
+          id: true,
+          username: true,
+          email: true,
         },
       });
     }

@@ -20,7 +20,7 @@ export class UserController {
     const token = this.jwtService.sign(
       {
         username: user.username,
-        sub: user.id,
+        uid: user.id,
       },
       {
         expiresIn: '1h',

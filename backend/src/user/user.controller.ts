@@ -3,15 +3,30 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
+import { JwtService } from '@nestjs/jwt';
+import { AllowNoLogin } from 'src/common/custom.decorator';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   @Post('login')
+  @AllowNoLogin()
   async login(@Body() loginUserDto: LoginUserDto) {
     const user = await this.userService.login(loginUserDto);
-    return user;
+    const token = this.jwtService.sign(
+      {
+        username: user.username,
+        sub: user.id,
+      },
+      {
+        expiresIn: '1h',
+      },
+    );
+    return { user, token };
   }
 
   @Post('register')

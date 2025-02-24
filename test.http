@@ -13,4 +13,4 @@ Content-Type: application/json
 
 ### 获取好友列表
 GET http://localhost:3001/friendship/list
-Authorization: bearer 
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwic3ViIjoxLCJpYXQiOjE3NDAzOTAwMDIsImV4cCI6MTc0MDM5MzYwMn0.QHf_LaJ8Mjuyk2vrJT4HEj-ZKcb1ZpZ7zlf7GBgbjgU

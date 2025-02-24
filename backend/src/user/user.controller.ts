@@ -2,14 +2,16 @@ import { Controller, Post, Body, Patch, Param, Get } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { LoginUserDto } from './dto/login-user.dto';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post('login')
-  login(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  async login(@Body() loginUserDto: LoginUserDto) {
+    const user = await this.userService.login(loginUserDto);
+    return user;
   }
 
   @Post('register')
@@ -28,7 +30,10 @@ export class UserController {
   updatePasswd(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(+id, updateUserDto);
   }
-
+  @Get('init_db')
+  init() {
+    return this.userService.init();
+  }
   @Get(':id')
   profile(@Param('id') id: string) {
     console.log(id);

@@ -8,6 +8,7 @@ import { EmailModule } from './common/email/email.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { JwtModule } from '@nestjs/jwt';
+import { FriendshipModule } from './friendship/friendship.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { JwtModule } from '@nestjs/jwt';
       }),
       inject: [ConfigService],
     }),
+    FriendshipModule,
   ],
   controllers: [AppController],
   providers: [AppService],

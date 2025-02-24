@@ -36,3 +36,16 @@ model Friendship {
 
   @@id([userId, friendId])
 }
+
+model FriendRequest {
+  id         Int      @id @default(autoincrement())
+  // 请求方
+  fromUserId Int
+  // 接收方
+  toUserId   Int
+  reason     String   @default("") @db.VarChar(100)
+  // 状态 0 待处理 1 已同意 2 已拒绝
+  status     Int      @default(0)
+  createTime DateTime @default(now())
+  updateTime DateTime @updatedAt
+}

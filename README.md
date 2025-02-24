@@ -65,8 +65,8 @@ deleteMany
 findUnique  
 findFirst
 
-- @relation
-- @@id
+- @relation()
+- @@id()
 
 ## redis
 
@@ -95,3 +95,8 @@ model Friendship {
   @@id([userId, friendId])
 }
 ```
+
+好友关系就是用户和用户的多对多关联  
+加入群聊就是往用户-聊天室的中间表插入一条记录  
+friends 是 user 的好友有哪些。  
+inverseFriends 是 user 是哪些人的好友

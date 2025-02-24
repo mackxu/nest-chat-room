@@ -25,7 +25,7 @@ export class UserController {
         uid: user.id,
       },
       {
-        expiresIn: '1h',
+        expiresIn: '3h',
       },
     );
     return { user, token };

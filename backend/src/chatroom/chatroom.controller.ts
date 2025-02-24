@@ -34,8 +34,17 @@ export class ChatroomController {
   }
 
   @Get(':id/members')
-  @ApiOperation({ summary: '获取聊天室的成员' })
+  @ApiOperation({ summary: '获取聊天室的成员信息' })
   async getChatroomMembers(@Param('id') id: string) {
     return await this.chatroomService.getChatroomMembers(+id);
+  }
+
+  @Get(':id/add')
+  @ApiOperation({ summary: '申请通过，把好友加入群聊' })
+  async joinGroup(
+    @Param('id') gid: number,
+    @Query('join_uid') joinUserId: number,
+  ) {
+    return await this.chatroomService.joinGroup(gid, joinUserId);
   }
 }

@@ -89,4 +89,23 @@ export class ChatroomService {
     const userIds = users.map((item) => item.userId);
     return await this.userService.findList(userIds);
   }
+  async joinGroup(gid: number, joinUserId: number) {
+    const room = await this.prisma.chatroom.findUnique({
+      where: {
+        id: gid,
+      },
+    });
+    if (!room) {
+      throw new BadRequestException('聊天室不存在');
+    }
+    if (!room.type) {
+      throw new BadRequestException('不是群聊');
+    }
+    return await this.prisma.chatroomUser.create({
+      data: {
+        userId: joinUserId,
+        chatroomId: gid,
+      },
+    });
+  }
 }

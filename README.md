@@ -44,8 +44,9 @@ docker compose + pm2
 ## 第一阶段
 
 - [] 完成用户模块 登录、注册
-- [] auth guard **当失败时怎样定制返回内容**
-- [] 完成好友管理模块 添加好友
+- [x] auth guard **当失败时怎样定制返回内容**
+- [] 单 token 无限续期
+- [] 完成好友管理模块 添加好友, 好友列表
 - [] 完成聊天室管理模块 新建聊天室、加入聊天室
 - [] 完成聊天模块 聊天
 
@@ -66,8 +67,9 @@ deleteMany
 findUnique  
 findFirst
 
-- @relation()
-- @@id()
+- @relation() 外键
+- @unique() 唯一索引
+- @@id() 主键
 
 ## redis
 
@@ -103,3 +105,20 @@ model Friendship {
 加入群聊就是往用户-聊天室的中间表插入一条记录  
 friends 是 user 的好友有哪些。  
 inverseFriends 是 user 是哪些人的好友
+
+## chatroom
+
+/chatroom/create-one-to-one  
+/chatroom/create-group  
+单聊把 user 和 friend 加入聊天室，群聊只把 user 加入聊天室。
+
+Get /chatroom 查看聊天列表 (成员数量)  
+Get /chatroom/:id/members 查看聊天室用户  
+Post /chatroom/:id/join 加入聊天室  
+Post /chatroom/:id/exit 退出聊天室  
+Get /chatroom/:id 查看聊天室信息
+
+## chat 聊天
+
+websocket  
+聊天记录 chat-history

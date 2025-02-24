@@ -14,3 +14,14 @@ Content-Type: application/json
 ### 获取好友列表
 GET http://localhost:3001/friendship/list
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwidWlkIjoxLCJpYXQiOjE3NDAzOTE5OTksImV4cCI6MTc0MDM5NTU5OX0.s5CR3VkFbNsNmz44K8EDM0DcWzTLpIPC55BJhNnMD_U
+### 创建单聊
+GET http://localhost:3001/chatroom/create-one-to-one?friendId=2
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwidWlkIjoxLCJpYXQiOjE3NDA0MDM2NTAsImV4cCI6MTc0MDQwNzI1MH0.-MwNeIEbiKF93RAgtEGwEDTd-80VTQT7mYPRIbV-0R0
+
+### 创建群聊
+GET http://localhost:3001/chatroom/create-group
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwidWlkIjoxLCJpYXQiOjE3NDA0MDgwNDIsImV4cCI6MTc0MDQxMTY0Mn0.nw4wtDqkEaFDfGiwYf_nmkgRxBVC8J_E761gnIRduHs
+
+### 获取聊天室信息
+GET http://localhost:3001/chatroom/3/members
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwidWlkIjoxLCJpYXQiOjE3NDA0MDgwNDIsImV4cCI6MTc0MDQxMTY0Mn0.nw4wtDqkEaFDfGiwYf_nmkgRxBVC8J_E761gnIRduHs

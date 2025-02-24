@@ -35,12 +35,32 @@ export class UserService {
     return 'This action adds a new user';
   }
 
-  findAll() {
-    return `This action returns all user`;
+  findList(ids: number[]) {
+    return this.prisma.user.findMany({
+      where: {
+        id: {
+          in: ids,
+        },
+      },
+      omit: {
+        password: true,
+      },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: number) {
+    return this.prisma.user.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        username: true,
+        nickName: true,
+        email: true,
+        headPic: true,
+      },
+    });
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {

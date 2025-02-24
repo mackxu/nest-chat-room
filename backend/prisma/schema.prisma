@@ -49,3 +49,20 @@ model FriendRequest {
   createTime DateTime @default(now())
   updateTime DateTime @updatedAt
 }
+
+model Chatroom {
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(50)
+  // false 单聊, true 群聊
+  type       Boolean  @default(false)
+  createTime DateTime @default(now())
+  updateTime DateTime @updatedAt
+}
+
+// 没有创建外键
+model ChatroomUser {
+  userId     Int
+  chatroomId Int
+
+  @@id([userId, chatroomId])
+}

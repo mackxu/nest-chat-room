@@ -13,7 +13,7 @@ Content-Type: application/json
 
 ### 获取好友列表
 GET http://localhost:3001/friendship/list
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwidWlkIjoxLCJpYXQiOjE3NDAzOTE5OTksImV4cCI6MTc0MDM5NTU5OX0.s5CR3VkFbNsNmz44K8EDM0DcWzTLpIPC55BJhNnMD_U
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwidWlkIjoxLCJpYXQiOjE3NDA0NzA4ODQsImV4cCI6MTc0MDQ4MTY4NH0.R1F5IgPM46sJeWq_wkpu7OIH99YeSPl38T7Gi8-31Xo
 ### 创建单聊
 GET http://localhost:3001/chatroom/create-one-to-one?friendId=2
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwidWlkIjoxLCJpYXQiOjE3NDA0MDM2NTAsImV4cCI6MTc0MDQwNzI1MH0.-MwNeIEbiKF93RAgtEGwEDTd-80VTQT7mYPRIbV-0R0

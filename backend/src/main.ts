@@ -9,6 +9,7 @@ import { HttpExceptionFilter } from './filter/http-exception.filter';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
+    cors: true,
   });
   // 文档
   const config = new DocumentBuilder();

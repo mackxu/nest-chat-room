@@ -122,3 +122,9 @@ Get /chatroom/:id 查看聊天室信息
 
 websocket  
 聊天记录 chat-history
+
+## axios
+
+- HttpStatusCode
+- AxiosError
+- [] 取消请求

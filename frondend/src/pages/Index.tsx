@@ -1,3 +1,3 @@
 export function Index() {
-  return <div className="">index</div>;
+  return <div className="text-3xl">index</div>;
 }

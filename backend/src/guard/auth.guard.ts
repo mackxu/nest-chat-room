@@ -1,9 +1,9 @@
 import {
-  BadRequestException,
   CanActivate,
   ExecutionContext,
   Inject,
   Injectable,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
@@ -41,7 +41,7 @@ export class AuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest<Request>();
     const authHeader = request.headers.authorization;
     if (!authHeader) {
-      throw new BadRequestException('未登录');
+      throw new UnauthorizedException('未登录');
     }
     const [, token] = authHeader.split(' ');
     try {
@@ -50,7 +50,7 @@ export class AuthGuard implements CanActivate {
       return true;
     } catch (error) {
       console.log(error);
-      throw new BadRequestException('登录已过期');
+      throw new UnauthorizedException('登录已过期');
     }
   }
 }

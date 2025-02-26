@@ -1,12 +1,14 @@
 import { Controller, Get, Post } from '@nestjs/common';
 import { FriendshipService } from './friendship.service';
 import { UserInfo } from 'src/common/custom.decorator';
+import { ApiOperation } from '@nestjs/swagger';
 
 @Controller('friendship')
 export class FriendshipController {
   constructor(private readonly friendshipService: FriendshipService) {}
 
-  @Get('list')
+  @Get()
+  @ApiOperation({ summary: '获取好友列表' })
   async getFriendsList(@UserInfo('uid') userId: number) {
     return await this.friendshipService.getUserFriends(userId);
   }

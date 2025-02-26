@@ -123,6 +123,11 @@ Get /chatroom/:id 查看聊天室信息
 websocket  
 聊天记录 chat-history
 
+@nestjs/websockets @nestjs/platform-socket.io socket.io
+
+监听 joinRoom、sendMessage 消息。  
+websocket 也是有跨域问题的，需要配置 CORS。
+
 ## axios
 
 - HttpStatusCode

@@ -8,9 +8,7 @@ import { route } from './route';
 const router = createBrowserRouter(route);
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App>
-      <RouterProvider router={router} />
-    </App>
-  </StrictMode>,
+  <App>
+    <RouterProvider router={router} />
+  </App>,
 );

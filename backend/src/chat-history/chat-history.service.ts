@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ChatHistory } from '@prisma/client';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 
-type HistoryDto = Omit<ChatHistory, 'id'>;
+type HistoryDto = Omit<ChatHistory, 'id' | 'createTime'>;
 
 @Injectable()
 export class ChatHistoryService {
@@ -26,12 +26,9 @@ export class ChatHistoryService {
     });
   }
 
-  async saveHistory(senderId: number, historyDto: HistoryDto) {
+  async saveHistory(historyDto: HistoryDto) {
     await this.prisma.chatHistory.create({
-      data: {
-        senderId,
-        ...historyDto,
-      },
+      data: historyDto,
     });
   }
 }

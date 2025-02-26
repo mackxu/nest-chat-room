@@ -12,9 +12,9 @@ import { ChatService } from './chat.service';
 import { Server, Socket } from 'socket.io';
 import { from, map, Observable } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
+import { ChatHistoryService } from 'src/chat-history/chat-history.service';
 
 type ChatPayload = {
-  sendUserId: number;
   chatroomId: number;
   message: {
     type: 'text' | 'image';
@@ -41,6 +41,7 @@ export class ChatGateway
   constructor(
     private readonly chatService: ChatService,
     private readonly jwtService: JwtService,
+    private readonly chatHistoryService: ChatHistoryService,
   ) {}
 
   @SubscribeMessage('joinRoom')
@@ -59,7 +60,17 @@ export class ChatGateway
   }
 
   @SubscribeMessage('chat')
-  chat(@MessageBody() payload: ChatPayload) {
+  async chat(
+    @MessageBody() payload: ChatPayload,
+    @ConnectedSocket() client: Socket,
+  ) {
+    // 保存聊天记录
+    await this.chatHistoryService.saveHistory({
+      chatroomId: payload.chatroomId,
+      content: payload.message.content,
+      type: payload.message.type === 'text' ? 0 : 1,
+      senderId: client.data.user.uid,
+    });
     // 向指定的聊天室发送消息
     this.server.to(String(payload.chatroomId)).emit('message', {
       type: 'text',

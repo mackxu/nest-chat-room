@@ -106,6 +106,10 @@ model Friendship {
 friends 是 user 的好友有哪些。  
 inverseFriends 是 user 是哪些人的好友
 
+```js
+import { xxx } from "@prisma/client";
+```
+
 ## chatroom
 
 /chatroom/create-one-to-one  

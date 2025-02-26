@@ -1,24 +1,57 @@
-import { Button, Form, Input } from 'antd';
+import { useRequest } from 'ahooks';
+import { Button, Flex, Form, Input, Menu } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
-
+import { getChatroomList } from '../interfaces';
 interface Message {
   type: 'text' | 'image';
   content: string;
 }
 
 export function Chat() {
+  const { data, error, loading } = useRequest(getChatroomList);
+  if (loading) {
+    return <div>loading</div>;
+  }
+  if (error) {
+    return <div>error</div>;
+  }
+  const rooms = data?.map((item) => {
+    return {
+      label: item.name,
+      key: item.id,
+    };
+  });
+  return (
+    <Flex>
+      <Menu items={rooms} onSelect={() => {}} />
+      <ChatMain senderId={2} chatroomId={1} />
+    </Flex>
+  );
+}
+
+function ChatMain({
+  senderId,
+  chatroomId,
+}: {
+  senderId: number;
+  chatroomId: number;
+}) {
   const [chatList, setChatList] = useState<Message[]>([]);
   const socketRef = useRef<Socket>(null);
 
   useEffect(() => {
-    const socket = io('ws://localhost:3001');
+    const socket = io('ws://localhost:3001', {
+      auth: {
+        token: localStorage.getItem('token'),
+      },
+    });
     socketRef.current = socket;
     socket.on('connect', () => {
       console.log('connected');
       socket.emit('joinRoom', {
-        chatroomId: 1,
-        userId: 1,
+        chatroomId: chatroomId,
+        userId: senderId,
       });
       socket.on('message', (data) => {
         console.log('message', data);
@@ -35,7 +68,7 @@ export function Chat() {
     return () => {
       socket.disconnect();
     };
-  }, []);
+  }, [chatroomId, senderId]);
   return (
     <div className="pl-5 pt-10">
       <Form
@@ -59,7 +92,6 @@ export function Chat() {
             发送
           </Button>
         </Form.Item>
-        <button type="submit">发送</button>
       </Form>
       {chatList.map((item, idx) => {
         return (

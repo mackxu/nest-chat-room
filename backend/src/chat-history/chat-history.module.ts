@@ -5,5 +5,6 @@ import { ChatHistoryController } from './chat-history.controller';
 @Module({
   controllers: [ChatHistoryController],
   providers: [ChatHistoryService],
+  exports: [ChatHistoryService],
 })
 export class ChatHistoryModule {}

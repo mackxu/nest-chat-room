@@ -69,10 +69,10 @@ model ChatroomUser {
 
 model ChatHistory {
   id         Int      @id @default(autoincrement())
+  //聊天记录类型 text:0、image:1、file:2
+  type       Int      @default(0)
   senderId   Int
   chatroomId Int
-  //聊天记录类型 text:0、image:1、file:2
   content    String   @db.VarChar(1000)
-  type       Int      @default(0)
   createTime DateTime @default(now())
 }

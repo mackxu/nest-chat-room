@@ -2,10 +2,12 @@ import {
   ConnectedSocket,
   MessageBody,
   OnGatewayConnection,
+  OnGatewayDisconnect,
   OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
+  WsException,
   WsResponse,
 } from '@nestjs/websockets';
 import { ChatService } from './chat.service';
@@ -13,6 +15,8 @@ import { Server, Socket } from 'socket.io';
 import { from, map, Observable } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
 import { ChatHistoryService } from 'src/chat-history/chat-history.service';
+import { UseGuards } from '@nestjs/common';
+import { AuthWsGuard } from 'src/guard/auth-ws.guard';
 
 type ChatPayload = {
   chatroomId: number;
@@ -32,9 +36,8 @@ type JoinRoomPayload = {
     origin: '*',
   },
 })
-export class ChatGateway
-  implements OnGatewayConnection, OnGatewayConnection, OnGatewayInit
-{
+@UseGuards(AuthWsGuard)
+export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
   @WebSocketServer()
   server: Server;
 
@@ -44,11 +47,8 @@ export class ChatGateway
     private readonly chatHistoryService: ChatHistoryService,
   ) {}
 
-  @SubscribeMessage('joinRoom')
-  joinRoom(
-    @MessageBody() payload: JoinRoomPayload,
-    @ConnectedSocket() socket: Socket,
-  ) {
+  @SubscribeMessage('join_room')
+  joinRoom(@MessageBody() payload: JoinRoomPayload, @ConnectedSocket() socket: Socket) {
     console.log('joinRoom', payload, socket.data.user);
     const rid = String(payload.chatroomId);
     socket.join(rid);
@@ -59,11 +59,20 @@ export class ChatGateway
     return payload.chatroomId;
   }
 
+  @SubscribeMessage('leave_room')
+  leaveRoom(@MessageBody() payload: JoinRoomPayload, @ConnectedSocket() socket: Socket) {
+    console.log('leaveRoom', payload, socket.data.user);
+    const rid = String(payload.chatroomId);
+    socket.leave(rid);
+    this.server.to(rid).emit('message', {
+      type: 'text',
+      content: `${socket.data.user?.uid} leave room`,
+    });
+    return payload.chatroomId;
+  }
+
   @SubscribeMessage('chat')
-  async chat(
-    @MessageBody() payload: ChatPayload,
-    @ConnectedSocket() client: Socket,
-  ) {
+  async chat(@MessageBody() payload: ChatPayload, @ConnectedSocket() client: Socket) {
     // 保存聊天记录
     await this.chatHistoryService.saveHistory({
       chatroomId: payload.chatroomId,
@@ -78,11 +87,19 @@ export class ChatGateway
     });
   }
 
+  @SubscribeMessage('room_user_count')
+  roomUserCount(@MessageBody() payload: JoinRoomPayload) {
+    const rid = String(payload.chatroomId);
+    const count = this.server.sockets.adapter.rooms.get(rid)?.size ?? 0;
+    return {
+      chatroomId: payload.chatroomId,
+      count,
+    };
+  }
+
   @SubscribeMessage('async')
   asyncMsg(): Observable<WsResponse<number>> {
-    return from([1, 2, 3]).pipe(
-      map((item) => ({ event: 'hello', data: item })),
-    );
+    return from([1, 2, 3]).pipe(map((item) => ({ event: 'hello', data: item })));
   }
 
   afterInit() {
@@ -90,8 +107,13 @@ export class ChatGateway
   }
 
   handleConnection(client: Socket) {
+    console.log('OnGatewayConnection');
+    console.log(this.server.engine.clientsCount, 'clientsCount');
     try {
-      const token = client.handshake?.auth?.token;
+      const token = client.handshake?.auth?.token ?? client.handshake.headers?.token;
+      if (!token) {
+        throw new WsException('token is required');
+      }
       const payload = this.jwtService.verify(token);
       client.data.user = payload;
     } catch (error) {
@@ -101,6 +123,6 @@ export class ChatGateway
   }
 
   handleDisconnect() {
-    console.log('OnGatewayDisconnection');
+    console.log('OnGatewayDisconnection!');
   }
 }

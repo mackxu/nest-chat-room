@@ -52,6 +52,7 @@ export class UserController {
   }
 
   @Get('init_db')
+  @AllowNoLogin()
   init() {
     return this.userService.init();
   }

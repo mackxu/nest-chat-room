@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE `User` MODIFY `nickName` VARCHAR(50) NOT NULL DEFAULT '';

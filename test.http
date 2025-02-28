@@ -1,3 +1,5 @@
+@auth = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InpoYW5nc2FuIiwidWlkIjoyLCJpYXQiOjE3NDA3MzExNDQsImV4cCI6MTc0MDc0MTk0NH0._L51tfAiBsuylg42jHtO2v9V_b-AqPt1uFbRfWMdT6w
+
 ### 导入用户数据
 
 GET http://localhost:3001/user/init_db
@@ -7,24 +9,27 @@ POST http://localhost:3001/user/login
 Content-Type: application/json
 
 {
-    "username": "admin",
+    "username": "zhangsan",
     "password": "123123"
 }
 
-@auth = 
+### 获取好友列表
+# @name add_friend
+POST http://localhost:3001/friendship/add/friend/3
+Authorization: bearer {{auth}}
 
 ### 获取好友列表
 # @name friendship
-GET http://localhost:3001/friendship/list
+GET http://localhost:3001/friendship
 Authorization: bearer {{auth}}
 ### 创建单聊
-GET http://localhost:3001/chatroom/create-one-to-one?friendId=2
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwidWlkIjoxLCJpYXQiOjE3NDA0MDM2NTAsImV4cCI6MTc0MDQwNzI1MH0.-MwNeIEbiKF93RAgtEGwEDTd-80VTQT7mYPRIbV-0R0
+GET http://localhost:3001/chatroom/create-one-to-one?friendId=3
+Authorization: bearer {{auth}}
 
 ### 创建群聊
 GET http://localhost:3001/chatroom/create-group
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwidWlkIjoxLCJpYXQiOjE3NDA0MDgwNDIsImV4cCI6MTc0MDQxMTY0Mn0.nw4wtDqkEaFDfGiwYf_nmkgRxBVC8J_E761gnIRduHs
+Authorization: bearer {{auth}}
 
 ### 获取聊天室信息
-GET http://localhost:3001/chatroom/3/members
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwidWlkIjoxLCJpYXQiOjE3NDA0MTE3MTYsImV4cCI6MTc0MDQyMjUxNn0.jXgueTiLwG8VF-pAuXVZ7TjGTrRxqEDArd5QWh35DUY
+GET http://localhost:3001/chatroom
+Authorization: bearer {{auth}}

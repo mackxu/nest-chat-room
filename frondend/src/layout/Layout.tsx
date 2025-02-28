@@ -9,12 +9,12 @@ const items: MenuItem[] = [
     key: 'friendship',
   },
   {
-    label: '聊天',
-    key: 'chat',
-  },
-  {
     label: '群聊',
     key: 'group',
+  },
+  {
+    label: '聊天',
+    key: 'chat',
   },
 ];
 

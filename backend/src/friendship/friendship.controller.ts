@@ -1,4 +1,4 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get, Param, Post } from '@nestjs/common';
 import { FriendshipService } from './friendship.service';
 import { UserInfo } from 'src/common/custom.decorator';
 import { ApiOperation } from '@nestjs/swagger';
@@ -13,8 +13,14 @@ export class FriendshipController {
     return await this.friendshipService.getUserFriends(userId);
   }
 
-  @Post('remove/:friendId')
-  async removeFriend(userId: number, friendId: number) {
+  @Post('add/friend/:id')
+  async addFriend(@UserInfo('uid') userId: number, @Param('id') friendId: number) {
+    await this.friendshipService.addFriend(userId, friendId);
+    return '添加成功';
+  }
+
+  @Post('remove/friend/:id')
+  async removeFriend(@UserInfo('uid') userId: number, @Param('id') friendId: number) {
     await this.friendshipService.removeFriend(userId, friendId);
     return '删除成功';
   }

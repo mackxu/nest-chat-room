@@ -58,20 +58,25 @@ export class ChatroomService {
     });
     return room;
   }
-  async getAllChatroom(userId: number) {
-    const chatroomList = await this.prisma.chatroomUser.findMany({
+  async getAllChatroom(userId: number, type?: string) {
+    let roomType: boolean | undefined;
+    if (typeof type === 'string') {
+      roomType = type === 'group';
+    }
+    const chatroomList = await this.prisma.chatroom.findMany({
       where: {
-        userId,
-      },
-    });
-    const chatroomInfoList = await this.prisma.chatroom.findMany({
-      where: {
-        id: {
-          in: chatroomList.map((item) => item.chatroomId),
+        type: roomType,
+        users: {
+          some: {
+            userId,
+          },
         },
       },
+      include: {
+        users: true,
+      },
     });
-    return chatroomInfoList;
+    return chatroomList;
   }
   async getChatroomInfo(id: number) {
     return await this.prisma.chatroom.findUnique({

@@ -3,7 +3,7 @@ import { Chatroom, getChatroomList } from '../interfaces';
 import { Table, TableColumnsType } from 'antd';
 
 export function Group() {
-  const { data, error, loading } = useRequest(getChatroomList);
+  const { data, error, loading } = useRequest(() => getChatroomList('group'));
   if (loading) {
     return <div>loading...</div>;
   }

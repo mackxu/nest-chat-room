@@ -50,4 +50,12 @@ export class FriendshipService {
     });
     return true;
   }
+  async addFriend(userId: number, friendId: number) {
+    return await this.prisma.friendship.create({
+      data: {
+        userId,
+        friendId,
+      },
+    });
+  }
 }

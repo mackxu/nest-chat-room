@@ -26,18 +26,18 @@ export function Chat() {
   return (
     <Flex>
       <Menu items={rooms} onSelect={() => {}} />
-      <ChatMain chatroomId={1} />
+      <ChatRoom chatroomId={1} />
     </Flex>
   );
 }
 
-function ChatMain({ chatroomId }: { chatroomId: number }) {
+function ChatRoom({ chatroomId }: { chatroomId: number }) {
   const [chatList, setChatList] = useState<Message[]>([]);
 
   useEffect(() => {
     const onConnect = () => {
       console.log('connected');
-      socket.volatile.emit('joinRoom', {
+      socket.volatile.emit('join_room', {
         chatroomId: chatroomId,
       });
     };

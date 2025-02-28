@@ -106,9 +106,23 @@ model Friendship {
 friends 是 user 的好友有哪些。  
 inverseFriends 是 user 是哪些人的好友
 
+```ts
+// prisma.$transaction
+const transaction = await prisma.$transaction([deletePosts, deleteUser]);
+```
+
 ```js
 import { xxx } from "@prisma/client";
 ```
+
+create connect  
+create connectOrCreate  
+update disconnect: [{ id: 12 }, { id: 19 }],  
+update disconnect: true,  
+update set: [] // one-to-many  
+update deleteMany: {}  
+update deleteMany: { published: false, }  
+update deleteMany: [{ id: 7 }]
 
 ## chatroom
 

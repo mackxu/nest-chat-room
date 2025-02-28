@@ -16,16 +16,17 @@ datasource db {
 // model
 
 model User {
-  id              Int          @id @default(autoincrement())
-  username        String       @unique @db.VarChar(50)
-  password        String       @db.VarChar(50)
-  nickName        String       @default("") @db.VarChar(50)
-  email           String       @db.VarChar(50)
-  headPic         String       @default("") @db.VarChar(100)
-  createTime      DateTime     @default(now())
-  updateTime      DateTime     @updatedAt
-  friends         Friendship[] @relation("userToFriend")
-  inverseFrinends Friendship[] @relation("friendToUser")
+  id              Int            @id @default(autoincrement())
+  username        String         @unique @db.VarChar(50)
+  password        String         @db.VarChar(50)
+  nickName        String         @default("") @db.VarChar(50)
+  email           String         @db.VarChar(50)
+  headPic         String         @default("") @db.VarChar(100)
+  createTime      DateTime       @default(now())
+  updateTime      DateTime       @updatedAt
+  friends         Friendship[]   @relation("userToFriend")
+  inverseFrinends Friendship[]   @relation("friendToUser")
+  chatrooms       ChatroomUser[] // 一个用户可以在多个聊天室中
 }
 
 model Friendship {
@@ -51,20 +52,28 @@ model FriendRequest {
 }
 
 model Chatroom {
-  id         Int      @id @default(autoincrement())
-  name       String   @db.VarChar(50)
+  id         Int            @id @default(autoincrement())
+  name       String         @db.VarChar(50)
   // false 单聊, true 群聊
-  type       Boolean  @default(false)
-  createTime DateTime @default(now())
-  updateTime DateTime @updatedAt
+  type       Boolean        @default(false)
+  createTime DateTime       @default(now())
+  updateTime DateTime       @updatedAt
+  users      ChatroomUser[] // 一个聊天室可以有多个用户
 }
 
 // 没有创建外键
 model ChatroomUser {
   userId     Int
   chatroomId Int
+  joinTime   DateTime @default(now())
 
-  @@id([userId, chatroomId])
+  // 定义外键
+  user     User     @relation(fields: [userId], references: [id])
+  chatroom Chatroom @relation(fields: [chatroomId], references: [id])
+
+  // 设置复合主键
+  @@id([chatroomId, userId])
+  @@unique([chatroomId, userId])
 }
 
 model ChatHistory {

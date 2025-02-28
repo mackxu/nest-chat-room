@@ -39,9 +39,15 @@ export type Chatroom = {
   updateTime: string;
 };
 
-export async function getChatroomList() {
+export type ChatroomType = 'single' | 'group';
+
+export async function getChatroomList(type?: ChatroomType) {
+  let url = '/chatroom';
+  if (type) {
+    url += '?type=' + type;
+  }
   const res = await request<Chatroom[]>({
-    url: '/chatroom',
+    url,
     method: 'get',
   });
   return res.data;

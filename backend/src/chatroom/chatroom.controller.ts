@@ -9,11 +9,8 @@ export class ChatroomController {
 
   @Get('create-one-to-one')
   @ApiOperation({ summary: '创建单聊' })
-  async createOneToOne(
-    @Query('friendId') friendId: string,
-    @UserInfo('uid') userId: number,
-  ) {
-    return await this.chatroomService.createOneToOne(+friendId, userId);
+  async createOneToOne(@Query('friendId') friendId: number, @UserInfo('uid') userId: number) {
+    return await this.chatroomService.createOneToOne(friendId, userId);
   }
 
   @Get('create-group')
@@ -24,8 +21,8 @@ export class ChatroomController {
 
   @Get()
   @ApiOperation({ summary: '获取所有聊天室列表' })
-  async getAllChatroom(@UserInfo('uid') userId: number) {
-    return await this.chatroomService.getAllChatroom(userId);
+  async getAllChatroom(@UserInfo('uid') userId: number, @Query('type') type?: string) {
+    return await this.chatroomService.getAllChatroom(userId, type);
   }
   @Get(':id')
   @ApiOperation({ summary: '获取聊天室的信息' })
@@ -41,10 +38,7 @@ export class ChatroomController {
 
   @Get(':id/add')
   @ApiOperation({ summary: '申请通过，把好友加入群聊' })
-  async joinGroup(
-    @Param('id') gid: number,
-    @Query('join_uid') joinUserId: number,
-  ) {
+  async joinGroup(@Param('id') gid: number, @Query('join_uid') joinUserId: number) {
     return await this.chatroomService.joinGroup(gid, joinUserId);
   }
 }

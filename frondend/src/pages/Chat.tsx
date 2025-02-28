@@ -3,13 +3,15 @@ import { Button, Flex, Form, Input, Menu } from 'antd';
 import { useEffect, useState } from 'react';
 import { getChatroomList } from '../interfaces';
 import { socket } from '../utils/socket';
-import { Socket } from 'socket.io-client';
+import { useLocation } from 'react-router';
 interface Message {
   type: 'text' | 'image';
   content: string;
 }
 
 export function Chat() {
+  const loc = useLocation();
+  const [roomId, setRoomId] = useState<number>(loc.state?.roomId);
   const { data, error, loading } = useRequest(getChatroomList);
   if (loading) {
     return <div>loading</div>;
@@ -25,8 +27,14 @@ export function Chat() {
   });
   return (
     <Flex>
-      <Menu items={rooms} onSelect={() => {}} />
-      <ChatRoom chatroomId={1} />
+      <Menu
+        items={rooms}
+        selectedKeys={[String(roomId)]}
+        onSelect={({ key }) => {
+          setRoomId(Number(key));
+        }}
+      />
+      {roomId ? <ChatRoom chatroomId={roomId} /> : null}
     </Flex>
   );
 }
@@ -35,36 +43,23 @@ function ChatRoom({ chatroomId }: { chatroomId: number }) {
   const [chatList, setChatList] = useState<Message[]>([]);
 
   useEffect(() => {
-    const onConnect = () => {
-      console.log('connected');
-      socket.volatile.emit('join_room', {
-        chatroomId: chatroomId,
-      });
-    };
+    if (!chatroomId) return;
+    socket.emit('join_room', { chatroomId }, ([res, error]: any) => {
+      if (error) {
+        console.log('join room error', error);
+        return;
+      }
+      console.log('join room', res);
+    });
 
-    const onConnectError = (err: any) => {
-      console.log('error', err);
-    };
-
-    const onDisconnect = (reason: Socket.DisconnectReason) => {
-      console.log('disconnect', reason);
-    };
-
-    socket.on('connect', onConnect);
-    socket.on('connect_error', onConnectError);
-    socket.on('disconnect', onDisconnect);
-    socket.connect();
     return () => {
-      socket.off('connect', onConnect);
-      socket.off('connect_error', onConnectError);
-      socket.off('disconnect', onDisconnect);
-      socket.disconnect();
+      socket.emit('leave_room', { chatroomId });
     };
   }, [chatroomId]);
 
   useEffect(() => {
     const onMessage = (data: any) => {
-      // console.log('message', data);
+      console.log('message', data);
       setChatList((prev) => {
         return [...prev, data];
       });
@@ -80,7 +75,7 @@ function ChatRoom({ chatroomId }: { chatroomId: number }) {
       <Form
         style={{ maxWidth: 300 }}
         onFinish={(values) => {
-          socket.volatile?.emit('chat', {
+          socket.emit('chat', {
             chatroomId,
             message: {
               type: 'text',

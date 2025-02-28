@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { ChatroomService } from './chatroom.service';
 import { ApiOperation } from '@nestjs/swagger';
 import { UserInfo } from 'src/common/custom.decorator';
@@ -36,9 +36,9 @@ export class ChatroomController {
     return await this.chatroomService.getChatroomMembers(+id);
   }
 
-  @Get(':id/add')
+  @Post(':id/add_member/:join_uid')
   @ApiOperation({ summary: '申请通过，把好友加入群聊' })
-  async joinGroup(@Param('id') gid: number, @Query('join_uid') joinUserId: number) {
-    return await this.chatroomService.joinGroup(gid, joinUserId);
+  async joinGroup(@Param('id') gid: number, @Param('join_uid') joinUserId: number, @UserInfo('uid') userId: number) {
+    return await this.chatroomService.joinGroup(gid, joinUserId, userId);
   }
 }

@@ -51,12 +51,18 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
   joinRoom(@MessageBody() payload: JoinRoomPayload, @ConnectedSocket() socket: Socket) {
     console.log('joinRoom', payload, socket.data.user);
     const rid = String(payload.chatroomId);
-    socket.join(rid);
-    this.server.to(rid).emit('message', {
-      type: 'text',
-      content: `${socket.data.user?.uid} join room`,
-    });
-    return payload.chatroomId;
+    try {
+      socket.join(rid);
+      this.server.to(rid).emit('message', {
+        type: 'text',
+        content: `${socket.data.user?.uid} join room ${rid}`,
+      });
+    } catch (error) {
+      console.log(error);
+      return [null, 'join room failed'];
+    }
+
+    return [rid];
   }
 
   @SubscribeMessage('leave_room')
@@ -64,10 +70,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
     console.log('leaveRoom', payload, socket.data.user);
     const rid = String(payload.chatroomId);
     socket.leave(rid);
-    this.server.to(rid).emit('message', {
-      type: 'text',
-      content: `${socket.data.user?.uid} leave room`,
-    });
     return payload.chatroomId;
   }
 

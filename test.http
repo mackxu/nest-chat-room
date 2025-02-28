@@ -1,4 +1,4 @@
-@auth = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InpoYW5nc2FuIiwidWlkIjoyLCJpYXQiOjE3NDA3MzExNDQsImV4cCI6MTc0MDc0MTk0NH0._L51tfAiBsuylg42jHtO2v9V_b-AqPt1uFbRfWMdT6w
+@auth = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwidWlkIjoxLCJpYXQiOjE3NDA3MzQ4MzMsImV4cCI6MTc0MDc0NTYzM30.JGGNIS1xvv31_xWccmS58nGQyxIsu5McnmY4AZ5I--E
 
 ### 导入用户数据
 
@@ -9,7 +9,7 @@ POST http://localhost:3001/user/login
 Content-Type: application/json
 
 {
-    "username": "zhangsan",
+    "username": "admin",
     "password": "123123"
 }
 
@@ -32,4 +32,8 @@ Authorization: bearer {{auth}}
 
 ### 获取聊天室信息
 GET http://localhost:3001/chatroom
+Authorization: bearer {{auth}}
+
+### 群聊添加成员
+POST http://localhost:3001/chatroom/2/add_member/3
 Authorization: bearer {{auth}}

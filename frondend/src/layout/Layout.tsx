@@ -1,5 +1,8 @@
-import { Menu, MenuProps } from 'antd';
+import { App, Menu, MenuProps } from 'antd';
 import { Outlet, useLocation, useNavigate } from 'react-router';
+import { useEffect, useMemo } from 'react';
+import { socket } from '../utils/socket';
+import { Socket } from 'socket.io-client';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -20,6 +23,7 @@ const items: MenuItem[] = [
 
 export function Layout() {
   const loc = useLocation();
+  const currPath = useMemo(() => loc.pathname.substring(1), [loc.pathname]);
   const navigator = useNavigate();
   return (
     <div className="p-20">
@@ -31,7 +35,7 @@ export function Layout() {
         <div className="w-30">
           <Menu
             items={items}
-            defaultSelectedKeys={[loc.pathname.substring(1)]}
+            selectedKeys={[currPath]}
             onClick={(item) => {
               navigator(item.key);
             }}
@@ -46,6 +50,32 @@ export function Layout() {
 }
 
 function Main({ isHome }: { isHome: boolean }) {
+  const { message } = App.useApp();
+  useEffect(() => {
+    const onConnect = () => {
+      console.log('connected');
+      message.success('聊天服务器连接成功');
+    };
+
+    const onConnectError = (err: any) => {
+      console.log('error', err);
+    };
+
+    const onDisconnect = (reason: Socket.DisconnectReason) => {
+      console.log('disconnect', reason);
+    };
+
+    socket.on('connect', onConnect);
+    socket.on('connect_error', onConnectError);
+    socket.on('disconnect', onDisconnect);
+    socket.connect();
+    return () => {
+      socket.off('connect', onConnect);
+      socket.off('connect_error', onConnectError);
+      socket.off('disconnect', onDisconnect);
+      socket.disconnect();
+    };
+  }, [message]);
   if (isHome) {
     return <div>首页</div>;
   }

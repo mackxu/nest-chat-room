@@ -1,8 +1,10 @@
 import { useRequest } from 'ahooks';
 import { Chatroom, getChatroomList } from '../interfaces';
-import { Table, TableColumnsType } from 'antd';
+import { Button, Table, TableColumnsType } from 'antd';
+import { useNavigate } from 'react-router';
 
 export function Group() {
+  const navigator = useNavigate();
   const { data, error, loading } = useRequest(() => getChatroomList('group'));
   if (loading) {
     return <div>loading...</div>;
@@ -25,10 +27,17 @@ export function Group() {
       title: '操作',
       key: 'action',
       dataIndex: 'action',
-      render: (_, record) => {
+      render: (_, room) => {
         return (
           <div>
-            <a href="#">聊天</a>
+            <Button
+              type="link"
+              onClick={() => {
+                navigator('/chat', { state: { roomId: room.id } });
+              }}
+            >
+              进入
+            </Button>
           </div>
         );
       },

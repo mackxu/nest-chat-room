@@ -116,4 +116,35 @@ export class ChatroomService {
       },
     });
   }
+  async getSingleChatroom(userId: number, friendId: number) {
+    // 当前用户所有单聊的聊天室
+    const rooms = await this.prisma.chatroom.findMany({
+      where: {
+        type: false,
+        users: {
+          some: {
+            userId,
+          },
+        },
+      },
+    });
+    // 查找有成员的friendId的聊天室
+    const room = await this.prisma.chatroom.findFirst({
+      where: {
+        id: {
+          in: rooms.map((item) => item.id),
+        },
+        users: {
+          some: {
+            userId: friendId,
+          },
+        },
+      },
+    });
+    // 如果没有则创建
+    if (!room) {
+      return await this.createOneToOne(friendId, userId);
+    }
+    return room;
+  }
 }

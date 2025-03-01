@@ -1,8 +1,8 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { LoginUserDto } from './dto/login-user.dto';
+import { RegisterUserDto } from './dto/register-user.dto';
 
 @Injectable()
 export class UserService {
@@ -31,8 +31,17 @@ export class UserService {
     return user;
   }
 
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  register(registerDto: RegisterUserDto) {
+    return this.prisma.user.create({
+      data: {
+        username: registerDto.username,
+        password: registerDto.password,
+        email: registerDto.email,
+      },
+      omit: {
+        password: true,
+      },
+    });
   }
 
   findList(ids: number[]) {

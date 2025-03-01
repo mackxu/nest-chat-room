@@ -1,4 +1,4 @@
-@auth = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwidWlkIjoxLCJpYXQiOjE3NDA3MzQ4MzMsImV4cCI6MTc0MDc0NTYzM30.JGGNIS1xvv31_xWccmS58nGQyxIsu5McnmY4AZ5I--E
+@auth = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwidWlkIjoxLCJpYXQiOjE3NDA4MDgzNjksImV4cCI6MTc0MDgxOTE2OX0.pAaEcArKc7jPYhl8_lKJlLMJD_mCBDkKofTmUrV-KcU
 
 ### 导入用户数据
 
@@ -13,9 +13,20 @@ Content-Type: application/json
     "password": "123123"
 }
 
+### 注册用户
+POST http://localhost:3001/user/register
+Content-Type: application/json
+
+{
+    "username": "wangwu",
+    "password": "123123",
+    "nickName": "王五",
+    "email": "wangwu@nestjs.com"
+}
+
 ### 获取好友列表
 # @name add_friend
-POST http://localhost:3001/friendship/add/friend/3
+POST http://localhost:3001/friendship/add/friend/4
 Authorization: bearer {{auth}}
 
 ### 获取好友列表
@@ -36,4 +47,8 @@ Authorization: bearer {{auth}}
 
 ### 群聊添加成员
 POST http://localhost:3001/chatroom/2/add_member/3
+Authorization: bearer {{auth}}
+
+### 获取聊天室之好友聊天
+GET http://localhost:3001/chatroom/single?friend_id=4
 Authorization: bearer {{auth}}

@@ -1,9 +1,15 @@
-import { Table, TableColumnsType } from 'antd';
+import { Button, Table, TableColumnsType } from 'antd';
 import { useRequest } from 'ahooks';
-import { getFriendList, User } from '../interfaces';
+import { getFriendList, getSingleChatroom, User } from '../interfaces';
+import { useNavigate } from 'react-router';
 
 // 好友列表
 export function Friendship() {
+  const navigator = useNavigate();
+  const gotoChat = async (friendId: number) => {
+    const room = await getSingleChatroom(friendId);
+    navigator('/chat', { state: { roomId: room.id } });
+  };
   const { data, error, loading } = useRequest(getFriendList);
   if (loading) {
     return <div>loading...</div>;
@@ -29,7 +35,9 @@ export function Friendship() {
       render: (_, record) => {
         return (
           <div>
-            <a href="#">聊天</a>
+            <Button type="link" onClick={() => gotoChat(record.id)}>
+              聊天
+            </Button>
           </div>
         );
       },

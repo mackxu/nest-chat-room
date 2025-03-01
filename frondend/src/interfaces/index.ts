@@ -52,3 +52,11 @@ export async function getChatroomList(type?: ChatroomType) {
   });
   return res.data;
 }
+
+export async function getSingleChatroom(friendId: number) {
+  const res = await request<Chatroom>({
+    url: `/chatroom/single?friend_id=${friendId}`,
+    method: 'get',
+  });
+  return res.data;
+}

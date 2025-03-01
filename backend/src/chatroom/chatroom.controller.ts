@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { ChatroomService } from './chatroom.service';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { UserInfo } from 'src/common/custom.decorator';
 
 @Controller('chatroom')
@@ -24,8 +24,16 @@ export class ChatroomController {
   async getAllChatroom(@UserInfo('uid') userId: number, @Query('type') type?: string) {
     return await this.chatroomService.getAllChatroom(userId, type);
   }
+
+  @Get('single')
+  @ApiOperation({ summary: '获取单聊聊天室', description: '通过friendId获取单聊聊天室, 先查找, 没有则创建' })
+  @ApiQuery({ name: 'friendId', type: 'number', required: true })
+  async getSingleChatroom(@UserInfo('uid') userId: number, @Query('friend_id') friendId: number) {
+    return await this.chatroomService.getSingleChatroom(userId, friendId);
+  }
+
   @Get(':id')
-  @ApiOperation({ summary: '获取聊天室的信息' })
+  @ApiOperation({ summary: '通过id获取聊天室的信息' })
   async getChatroomInfo(@Param('id') id: string) {
     return await this.chatroomService.getChatroomInfo(+id);
   }

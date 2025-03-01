@@ -6,6 +6,7 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { AllowNoLogin } from 'src/common/custom.decorator';
 import { ApiOperation } from '@nestjs/swagger';
+import { RegisterUserDto } from './dto/register-user.dto';
 
 @Controller('user')
 export class UserController {
@@ -33,9 +34,9 @@ export class UserController {
 
   @Post('register')
   @AllowNoLogin()
-  @ApiOperation({ summary: '注册' })
-  register(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  @ApiOperation({ summary: '注册用户' })
+  register(@Body() registerDto: RegisterUserDto) {
+    return this.userService.register(registerDto);
   }
 
   // 修改密码
